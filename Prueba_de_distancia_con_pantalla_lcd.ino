@@ -34,3 +34,57 @@ void loop() {
   lcd.scrollDisplayLeft();
   
 }
+
+//  Separacion de codigos de pantalla lcd y sensores botones
+
+
+#include "DHT.h"
+
+int BAP = 3;   //Botón Arranque/Parada
+int BR = 4;    //Bomba Riego
+int EV = 5;    //Electroválvula
+int BMM = 6;   //Botón Marcha Motor
+int M = 7;     //Motor
+//int SAB = 8;   //Sensor Agua Bomba
+int SHT = A0;  //Sensor Humedad Tierra
+int STH = 9;   //Sensor Temperatura & Humedad
+
+#define DHTTYPE DHT11
+
+DHT dht(STH,DHTTYPE);
+
+void setup() {
+
+  Serial.begin(9600);
+  dht.begin();
+  
+  pinMode(Br,OUTPUT);
+
+
+}
+
+void loop() {
+  {
+    float h = dht.readHumidity();       //Lee Humedad ambiente
+    float t = dht.readTemperature();    //Lee Temperatura ambiente
+
+    Serial.print("Humedad: ");
+    Serial.print(h);
+    Serial.print(" %\t");
+    Serial.print("Temperatura: ");
+    Serial.print(t);}
+    Serial.print(" *C");
+  }
+  {
+  humedad = analogRead(A0);
+
+ if(humedad>=721 && humedad<=1024){
+   digitalWrite(Br,LOW);
+ }
+ else{
+   digitalWrite(Br,HIGH);
+ }
+ Serial.println(humedad);
+ delay(500);
+  }
+}
