@@ -35,7 +35,7 @@ void loop() {
   
 }
 
-//  Separacion de codigos de pantalla lcd y sensores botones
+//  Separacion de codigos de pantalla lcd y sensores-botones
 
 
 #include "DHT.h"
