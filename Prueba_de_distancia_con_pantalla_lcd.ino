@@ -1,41 +1,64 @@
-// Incluimos la libreria para la pantalla LCD
+ codigo de pantalla lcd y sensores-botones
+#include <Adafruit_Sensor.h>
+#include <DHT.h>
+#include <DHT_U.h>
 #include <LiquidCrystal.h>
+#define DHTTYPE DHT11
+#define sensorHumedad A0
+
 // Definimos que puertos estamos utilizando
+int led = 10;
+int ledRojo = 0;
+int STH = 9;   //Sensor Temperatura & Humedad
+int valorHumedad = 0; 
 LiquidCrystal lcd(2,3,4,5,6,7);
-// Declaramos variables
-int TRIG = 9;
-int ECHO = 8;
-int DISTANCIA;
-int DURACION;
-String dis = "DISTANCIA:";
+
+DHT dht(STH,DHTTYPE);
 
 
 void setup() {
-  // Definimos entradas,salidas y iniciamos el puerto Serial
-  pinMode(TRIG,OUTPUT);
-  pinMode(ECHO,INPUT);
-  Serial.begin(9600);
+  // put your setup code here, to run once:
+  Serial.begin(9600); 
+  lcd.begin(16,2);
+  dht.begin();
+  pinMode(led,OUTPUT);
+  pinMode(ledRojo,OUTPUT);
 }
+
 
 void loop() {
-  // Prendermos el TRIGGER y lo apagamos para que cada 1 milisegundo mande una señal y el ECHO la reciba
-  digitalWrite(TRIG,HIGH);
-  delay(1);
-  digitalWrite(TRIG,LOW);
-  // Definimos que es duracion y lo dividimos entre 58.2 para que de la medidad en cm y que cada 250 milesimas de segundo mande el valor de la distancia actualizado
-  DURACION = pulseIn(ECHO,HIGH);
-  DISTANCIA = DURACION / 58.2;
-  delay(250);
-  // Ponemos en que linea va a estar el mensaje y hacemos que se desplaze desde la derecha a la izquierda y cada 500 milesimas de segundo cambie el valor de la DISTANCIA
-  lcd.setCursor(5,0);
-  lcd.print(dis);
-  lcd.print(DISTANCIA);
-  delay(500);
-  lcd.scrollDisplayLeft();
-  
-}
+  float h = dht.readHumidity();       //Lee Humedad ambiente
+    float t = dht.readTemperature();    //Lee Temperatura ambiente
 
-//  Separacion de codigos de pantalla lcd y sensores-botones
+    Serial.print("Humedad: ");
+    Serial.print(h);
+    Serial.print(" %\t");
+    Serial.print("Temperatura: ");
+    Serial.print(t);
+    Serial.print(" *C");
+    Serial.println();
+    delay(2000);
+    int valorHumedad = map(analogRead(sensorHumedad),0 , 1023 , 100 ,0);
+  if(valorHumedad>50){
+    digitalWrite(led,HIGH);
+    digitalWrite(ledRojo,LOW);
+    }
+    else{
+      digitalWrite(ledRojo,HIGH);
+      digitalWrite(led,LOW);
+    }
+  
+  lcd.setCursor(5,0);
+  lcd.print("HumedadGND:");
+  lcd.print(valorHumedad);
+  lcd.setCursor(5,1);
+  lcd.print("TemperaturaENV:");
+  lcd.print(t);
+  lcd.setCursor(5,1);
+  lcd.print("HumedadENV:");
+  lcd.print(h);
+  delay(500);
+  lcd.scrollDisplayLeft();}
 
 
 #include "DHT.h"
@@ -49,32 +72,7 @@ int M = 7;     //Motor
 int SHT = A0;  //Sensor Humedad Tierra
 int STH = 9;   //Sensor Temperatura & Humedad
 
-#define DHTTYPE DHT11
 
-DHT dht(STH,DHTTYPE);
-
-void setup() {
-
-  Serial.begin(9600);
-  dht.begin();
-  
-  pinMode(Br,OUTPUT);
-
-
-}
-
-void loop() {
-  {
-    float h = dht.readHumidity();       //Lee Humedad ambiente
-    float t = dht.readTemperature();    //Lee Temperatura ambiente
-
-    Serial.print("Humedad: ");
-    Serial.print(h);
-    Serial.print(" %\t");
-    Serial.print("Temperatura: ");
-    Serial.print(t);}
-    Serial.print(" *C");
-  }
   {
   humedad = analogRead(A0);
 
