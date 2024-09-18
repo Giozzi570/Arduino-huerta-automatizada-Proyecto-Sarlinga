@@ -8,8 +8,8 @@
 
 // Definimos que puertos estamos utilizando
 int led = 10;
-int ledRojo = 0;
-int STH = 9;   //Sensor Temperatura & Humedad
+int ledRojo = 9;
+int STH = 8;   //Sensor Temperatura & Humedad
 int valorHumedad = 0; 
 LiquidCrystal lcd(2,3,4,5,6,7);
 
