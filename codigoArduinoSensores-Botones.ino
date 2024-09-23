@@ -1,4 +1,3 @@
-codigo de pantalla lcd y sensores-botones
 #include <Adafruit_Sensor.h>
 #include <DHT.h>
 #include <DHT_U.h>                                // Incluimos todas las librerias
@@ -14,6 +13,9 @@ int ledBuenaH = 10;// Definimos el led que va a prender cuando haya buena humeda
 int ledMalaH = 9;// Definimos el puerto al que va a ir la señal del arduino 
 int releElectroValvula = 11; // Definimos el puerto al que va a ir la señal del Arduino 
 int STH = 8;   //Sensor Temperatura & Humedad
+const int PULSADOR = 12;
+const int LED = 13;
+int estado; 
 int valorHumedad = 0; 
 LiquidCrystal lcd(2,3,4,5,6,7);
 
@@ -26,8 +28,10 @@ void setup() {
   lcd.begin(16,2);
   dht.begin();
   pinMode(releElectroValvula,OUTPUT);// Definimos el pin para que se comporte como una salida
-  pinMode(led,OUTPUT);// Definimos el pin para que se comporte como una salida
-  pinMode(ledRojo,OUTPUT);// Definimos el pin para que se comporte como una salida
+  pinMode(ledBuenaH,OUTPUT);// Definimos el pin para que se comporte como una salida
+  pinMode(ledMalaH,OUTPUT);// Definimos el pin para que se comporte como una salida
+  pinMode(PULSADOR,INPUT);
+  pinMode(LED,OUTPUT);
 }
 
 
@@ -45,16 +49,16 @@ void loop() {
     delay(2000);
     int valorHumedad = map(analogRead(SHT),0 , 1023 , 100 ,0);
    if(valorHumedad > 50){
-    digitalWrite(ledRojo,HIGH);
+    digitalWrite(ledMalaH,HIGH);
     delay(1000);
-    digitalWrite(ledRojo,LOW);
+    digitalWrite(ledMalaH,LOW);
     digitalWrite(releElectroValvula,RELE_ON);
     Serial.println("Electrovalvula abierta");
     }
     else{
-      digitalWrite(led,HIGH);
+      digitalWrite(ledBuenaH,HIGH);
       delay(1000);
-      digitalWrite(led,LOW);
+      digitalWrite(ledBuenaH,LOW);
       digitalWrite(releElectroValvula,RELE_OFF);
       Serial.println("Electrovalvula cerrada");
     }
@@ -69,4 +73,17 @@ void loop() {
   lcd.print("HumedadENV:");
   lcd.print(h);
   delay(500);
-  lcd.scrollDisplayLeft();}
+  lcd.scrollDisplayLeft();
+  
+  // Se almacena el estado del pulsador
+  estado = digitalRead(PULSADOR); 
+  // Si la lectura del pulsador es HIGH (pulsado)...
+  if  (estado == HIGH){
+    // ... enciende el LED.
+    digitalWrite(LED,HIGH);
+    delay(2000);  
+  // En caso contrario (no pulsado)... 
+  } else { 
+    // Apaga el LED
+    digitalWrite(LED,LOW); 
+  }}
