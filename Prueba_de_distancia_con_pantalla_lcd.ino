@@ -1,38 +1,41 @@
-#define sensor A05
-int led = 10;
-int ledRojo = 9;
-#include <LiquidCrystal.h>
-// Definimos que puertos estamos utilizando
-LiquidCrystal lcd(12,11,5,4,3,2);
-int valorHumedad = 0;
+int IN1 = 6;
+int IN2 = 7;
+const int BotonHorario=2;
+const int BotonAntiHorario=3;
+int val;
+int valor;
+void setup(){
+pinMode(BotonHorario,INPUT);
+pinMode(BotonAntiHorario,INPUT);
+pinMode(IN1,OUTPUT);
+pinMode(IN2,OUTPUT);
 
-
-void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(9600); 
-  lcd.begin(16,2);
-  pinMode(led,OUTPUT);
-  pinMode(ledRojo,OUTPUT);
+Serial.begin(9600);
+}
+void loop(){
+val=digitalRead(BotonHorario);
+if  (val==HIGH){
+Serial.println("BotonHorario = 1");
+digitalWrite(IN1,HIGH);
+digitalWrite(IN2,LOW);
+delay(2000);
+}
+else {
+Serial.println("BotonHorario = 0");
+digitalWrite(IN1,LOW);
+digitalWrite(IN2,LOW);
 }
 
-
-void loop() {
-  // put your main code here, to run repeatedly:
-  int valorHumedad = map(analogRead(sensor),0 , 1023 , 100 ,0);
-  if(valorHumedad>50){
-    digitalWrite(led,HIGH);
-    digitalWrite(ledRojo,LOW);
-    }
-    else{
-      digitalWrite(ledRojo,HIGH);
-      digitalWrite(led,LOW);
-    }
-  
-  lcd.setCursor(5,0);
-  lcd.print("Humedad:");
-  lcd.print(valorHumedad);
-  lcd.setCursor(5,1);
-  lcd.print("Temperatura:");
-  lcd.print(valorHumedad);
-  delay(500);
-  lcd.scrollDisplayLeft();
+valor=digitalRead(BotonAntiHorario);
+if   (valor==HIGH){
+Serial.println("BotonAntiHorario = 1");
+digitalWrite(IN1,LOW);
+digitalWrite(IN2,HIGH);
+delay(2000);
+}
+else {
+Serial.println("BotonAntiHorario = 0");
+digitalWrite(IN1,LOW);
+digitalWrite(IN2,LOW);
+}
+}
