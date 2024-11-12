@@ -13,8 +13,6 @@ int ledBuenaH = 10;// Definimos el led que va a prender cuando haya buena humeda
 int ledMalaH = 9;// Definimos el puerto al que va a ir la señal del arduino 
 int releElectroValvula = 11; // Definimos el puerto al que va a ir la señal del Arduino 
 int STH = 8;   //Sensor Temperatura & Humedad
-const int PULSADOR = 12;
-const int LED = 13;
 int estado; 
 int valorHumedad = 0; 
 LiquidCrystal lcd(2,3,4,5,6,7);
@@ -74,16 +72,4 @@ void loop() {
   lcd.print(h);
   delay(500);
   lcd.scrollDisplayLeft();
-  
-  // Se almacena el estado del pulsador
-  estado = digitalRead(PULSADOR); 
-  // Si la lectura del pulsador es HIGH (pulsado)...
-  if  (estado == HIGH){
-    // ... enciende el LED.
-    digitalWrite(LED,HIGH);
-    delay(2000);  
-  // En caso contrario (no pulsado)... 
-  } else { 
-    // Apaga el LED
-    digitalWrite(LED,LOW); 
-  }}
+
